@@ -1,0 +1,141 @@
+@import "variable";
+@import "layouts/layouts";
+@import "customs/index";
+:root {
+  --process-audio: 0;
+  --process-speaker: 100px;
+}
+
+* {
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  line-height: 1.6rem;
+  font-family: "Segoe UI Historic", "Segoe UI", "Helvetica Neue", "Arial",
+    sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ps__rail-y {
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+#menu {
+  .ps__thumb-y {
+    width: 8px;
+    right: 4px;
+  }
+  [data-tippy-root] {
+    top: -5px !important;
+    transform: translate(calc(100vw - 630px), $header-home-height) !important;
+  }
+}
+
+#messenger {
+  .ps__rail-y {
+    &:focus,
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+  .ps__thumb-y {
+    width: 6px !important;
+  }
+  [data-tippy-root] {
+    top: -5px !important;
+    transform: translate(calc(100vw - 380px), $header-home-height) !important;
+  }
+}
+
+#notification {
+  .ps__rail-y {
+    &:focus,
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+  .ps__thumb-y {
+    width: 6px !important;
+  }
+  [data-tippy-root] {
+    top: -5px !important;
+    transform: translate(calc(100vw - 380px), $header-home-height) !important;
+  }
+}
+
+.MuiBadge-badge {
+  top: -6px !important;
+  right: -6px !important;
+  font-size: 13px !important;
+}
+
+.row-center {
+  text-align: center !important;
+  width: 100%;
+}
+
+.quesTable {
+  background-color: #fff;
+  font-size: 14px !important;
+  .MuiDataGrid-cell:focus {
+    outline: none !important;
+  }
+  .MuiDataGrid-columnHeader {
+    background-color: $primary-color !important;
+    font-weight: 600;
+  }
+  .MuiDataGrid-columnHeader:last-child {
+    .MuiDataGrid-columnSeparator {
+      display: none;
+    }
+  }
+  .MuiDataGrid-columnSeparator {
+    svg {
+      fill: #000;
+    }
+  }
+  .MuiInputBase-root {
+    font-size: 14px !important;
+  }
+  .MuiTablePagination-selectLabel {
+    font-size: 14px !important;
+  }
+  .MuiTablePagination-displayedRows {
+    font-size: 14px !important;
+  }
+  .even-row {
+    background-color: rgb(238, 238, 238) !important;
+  }
+  .odd-row {
+    background-color: transparent !important;
+  }
+  .icon {
+    font-size: 20px;
+  }
+}
+
+.MuiButtonBase-root {
+  font-size: 14px !important;
+}
+
+.history-pagination {
+  .Mui-selected {
+    background-color: $primary-color !important;
+  }
+}
+
+.MuiSvgIcon-root {
+  width: 20px !important;
+  height: 20px !important;
+}

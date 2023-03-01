@@ -1,0 +1,39 @@
+@import "../../../styles/variable.scss";
+.icon-solid {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $secondary-btn-background;
+    border-radius: 50%;
+    i {
+        -webkit-filter: $filter-primary-icon;
+    }
+}
+
+.is-active {
+    background-color: rgba(45, 136, 255, 0.2);
+    i {
+        -webkit-filter: $filter-accent;
+    }
+    svg {
+        fill: hsl(214deg, 100%, 59%);
+    }
+}
+
+.is-active--home {
+    background-color: #1877f2;
+}
+
+.is-active--live {
+    background-color: hsl(350, 87%, 55%);
+}
+
+.is-active--home {
+    background-color: #2abba7;
+}
+
+.is-active--home {
+    background-color: #f7b928;
+}

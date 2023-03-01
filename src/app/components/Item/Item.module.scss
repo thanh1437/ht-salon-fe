@@ -1,0 +1,58 @@
+@import "../../../styles/variable.scss";
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 8px;
+    border-radius: 8px;
+    margin: 0 -8px;
+    &:hover {
+        background-color: $hover-overlay;
+    }
+}
+
+.image-wrapper {
+    margin: 8px 12px 8px 0;
+}
+
+.menu-item__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 12px 0;
+    justify-content: center;
+    .item-title {
+        font-size: 15px;
+        font-weight: 500;
+        color: $primary-text;
+        min-width: 116px;
+    }
+    .item-desc {
+        font-size: 13px;
+        font-weight: 400;
+        color: $secondary-text;
+    }
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 8px;
+    background-color: $secondary-btn-background;
+    cursor: pointer;
+    &:hover {
+        background-color: $hover-overlay;
+    }
+    .icon {
+        width: 20px;
+        height: 20px;
+        color: $primary-icon;
+    }
+}
+
+.no-bg {
+    background-color: transparent !important;
+}

@@ -1,0 +1,23 @@
+{
+    "language": {
+        "english": "English",
+        "vietnam": "Vietnamese"
+    },
+    "general": {
+        "notification": "Notification",
+        "shrink": "Shrink",
+        "button": {
+            "save": "Save",
+            "cancel": "Cancel"
+        }
+    },
+    "navigation": {
+        "userProfile": "User Profile",
+        "listUser": "List Users"
+    },
+    "auth": {
+        "username": "Username",
+        "password": "Password",
+        "account": "Account"
+    }
+}

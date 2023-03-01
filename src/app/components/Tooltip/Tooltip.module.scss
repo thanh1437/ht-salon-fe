@@ -1,0 +1,108 @@
+@import "../../../styles/variable.scss";
+.avatar__tool-tip {
+    border-radius: 8px;
+    width: 400px;
+    .header {
+        display: flex;
+        .info {
+            padding: 0 16px;
+        }
+        .info-name {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .info-desc {
+            display: flex;
+        }
+        .info-img {
+            margin: 6px 6px 0 0;
+        }
+        .info-desc-text {
+            font-size: 15px;
+            color: $primary-text;
+            margin: 6px;
+        }
+        .info-link {
+            font-size: 15px;
+            color: $primary-text;
+            font-weight: 600;
+        }
+    }
+    .actions {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.comment__tool-tip {
+    padding: 6px;
+    min-width: 200px;
+    .title {
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .users-list {
+        display: flex;
+        flex-direction: column;
+    }
+    .user-item {
+        font-size: 13px;
+    }
+    .loading {
+        color: #fff;
+        width: 30px !important;
+        height: 30px !important;
+    }
+}
+
+.comment-setting-tooltip {
+    .popper-link {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 5px;
+        text-align: left;
+        font-size: 15px;
+        color: $primary-text;
+        font-weight: 600;
+        border-radius: 6px;
+        &:hover {
+            background-color: $hover-overlay;
+        }
+    }
+}
+
+.btn {
+    margin: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    height: 36px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: $primary-text;
+    span {
+        margin-left: 10px;
+    }
+    .icon {
+        color: #fff;
+        -webkit-filter: invert(89%) sepia(6%) hue-rotate(185deg);
+    }
+}
+
+.btn-primary {
+    width: calc(296px / 2);
+    background-color: $primary-button;
+}
+
+.btn-secondary {
+    width: calc(296px / 2);
+    background-color: $secondary-btn-background;
+}
+
+.btn-square {
+    width: 48px;
+    background-color: $secondary-btn-background;
+}

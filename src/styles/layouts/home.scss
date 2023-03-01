@@ -1,0 +1,42 @@
+@import "../variable.scss";
+.main {
+  //   margin-top: $header-home-height;
+  // margin-bottom: $header-home-height;
+  height: 100%;
+  min-height: calc(100vh - ($header-home-height * 2));
+  background-color: #fff;
+}
+
+.Home-Page {
+  //   display: flex;
+  //   justify-content: center;
+}
+
+@media only screen and (min-width: 481px) and (max-width: 1130px) {
+}
+
+@media only screen and (max-width: 480px) {
+}
+
+// ::-webkit-scrollbar {
+//     width: auto;
+// }
+// ::-webkit-scrollbar-track {
+//     background: #3e4042;
+// }
+// ::-webkit-scrollbar-thumb {
+//     background: #888;
+//     // border-radius: 20px;
+// }
+// ::-webkit-scrollbar-thumb:hover {
+//     background: #555;
+//     // border-radius: 20px;
+// }
+.tabs {
+  .MuiTabs-indicator {
+    background-color: $primary-color;
+  }
+  .MuiTab-wrapper {
+    font-weight: 600;
+  }
+}

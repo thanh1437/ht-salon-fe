@@ -5,11 +5,9 @@ export const routes = {
   booking: "/booking",
   admin: {
     dashboard: ADMIN_PATH + "/dashboard",
-    courses: ADMIN_PATH + "/courses",
+    services: ADMIN_PATH + "/services",
+    combos: ADMIN_PATH + "/combos",
     accounts: ADMIN_PATH + "/accounts",
-    accountDetail: ADMIN_PATH + "/account-detail",
-    topics: ADMIN_PATH + "/topics",
-    courseDetail: ADMIN_PATH + "/course-detail",
-    adminProfile: ADMIN_PATH + "/user-profile",
+    calendar: ADMIN_PATH + "/calendar",
   },
 };

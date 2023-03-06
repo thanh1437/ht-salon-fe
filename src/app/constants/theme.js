@@ -4,6 +4,16 @@ export const colorTheme = {
     hover: "#ffb400",
     color: "#fff",
   },
+  blue: {
+    background: "#3f50b5",
+    hover: "#3f50b5",
+    color: "#fff",
+  },
+  purple: {
+    background: "#d500f9",
+    hover: "#d500f9",
+    color: "#fff",
+  },
   success: {
     background: "#28a745",
     hover: "#28a745",

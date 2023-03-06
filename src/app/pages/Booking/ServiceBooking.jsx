@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Grid, Tab, Tabs } from "@material-ui/core";
 import PropTypes from "prop-types";
 import * as actions from "../../redux/booking/actions";
 import CardItem from "./CardItem";
 import { useDispatch, useSelector } from "react-redux";
+import LoadingSpinier from "../../components/Spinners/LoadingSpinier";
+import { getServices } from "../../service/booking";
+import { ToastContext } from "../../context/ToastContextProvider";
 
 import classNames from "classnames/bind";
 import styles from "./Booking.module.scss";
-import LoadingSpinier from "../../components/Spinners/LoadingSpinier";
 
 const cx = classNames.bind(styles);
 
@@ -41,6 +43,7 @@ function a11yProps(index) {
 }
 
 export default function ServiceBooking({ onClick, onClose, onSubmit }) {
+  const toast = useContext(ToastContext);
   const dispatch = useDispatch();
   const [disabled, setDisabled] = useState(true);
   const { service, loading } = useSelector((state) => state.booking);
@@ -48,7 +51,20 @@ export default function ServiceBooking({ onClick, onClose, onSubmit }) {
 
   useEffect(() => {
     checkDisable();
-  });
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      getServices({}, token).then(({ data }) => {
+        console.log(data);
+      });
+    } else {
+      toast.setDataAlert({
+        ...toast.dataAlert,
+        isOpen: true,
+        message: "Bạn cần phải đăng nhập để có thể đặt lịch",
+        status: "error",
+      });
+    }
+  }, []);
 
   const checkDisable = () => {
     let check = [...service["service"], ...service["combo"]].some(

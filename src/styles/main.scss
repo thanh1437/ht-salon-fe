@@ -139,3 +139,36 @@ body {
   width: 20px !important;
   height: 20px !important;
 }
+
+body {
+  position: relative;
+}
+
+.MuiPickersPopper-root {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  .MuiPickersCalendarHeader-label {
+    font-size: 14px !important;
+  }
+}
+
+.autocomplete-search {
+  margin-left: 20px;
+  .MuiFormLabel-root {
+    font-size: 14px !important;
+  }
+}
+
+.MuiAutocomplete-option {
+  font-size: 14px !important;
+}
+
+.date-search {
+  margin-left: 20px !important;
+  margin-bottom: -3px !important;
+  .MuiFormLabel-root {
+    font-size: 14px !important;
+  }
+}

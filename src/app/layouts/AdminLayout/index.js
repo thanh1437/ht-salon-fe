@@ -35,7 +35,7 @@ function Admin({ children }) {
           <div className={cx("main")}>
             <div className={cx("wrapper")}>{children}</div>
           </div>
-          <div className="footer">Develop by HairStyleTeam</div>
+          <div className="footer">Phát triển bởi HTSalon</div>
         </div>
       </div>
     </div>

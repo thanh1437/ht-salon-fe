@@ -1,12 +1,18 @@
-import { getDataSubmit, getService, getType } from "../booking/actions";
+import {
+  getDataSubmit,
+  getService,
+  getStylist,
+  getType,
+} from "../booking/actions";
 
 const initialState = {
   service: null,
+  stylists: null,
   dataSubmit: {
-    ChooseUserId: 0,
+    ChooseUserId: null,
     startTime: null,
     description: null,
-    takePhoto: null,
+    takePhoto: 0,
     serviceIds: [],
     comboIds: [],
   },
@@ -28,6 +34,21 @@ const BookingReducer = (state = initialState, action) => {
       let item = state.service[type].find((item) => item.id === id);
       item.isChoose = !item.isChoose;
       return { ...state, service: state.service, loading: false, error: null };
+    }
+
+    case getType(getStylist.getStylistRequest): {
+      return { ...state, loading: true };
+    }
+    case getType(getStylist.getStylistSuccess): {
+      return {
+        ...state,
+        stylists: action.payload,
+        loading: false,
+        error: null,
+      };
+    }
+    case getType(getStylist.getStylistFailure): {
+      return { ...state, loading: false, error: null };
     }
 
     case getType(getDataSubmit.changeDataSubmit): {

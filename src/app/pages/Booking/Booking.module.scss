@@ -49,6 +49,10 @@
     &:first-child:before {
       top: 0px;
     }
+    &:last-child {
+      border-left: none;
+      padding-bottom: 10px;
+    }
     &::before {
       content: "";
       width: 20px;
@@ -125,7 +129,7 @@
   .styList-item {
     display: flex;
     flex-direction: column;
-    margin: auto;
+    margin: 0 auto;
     align-items: center;
   }
   .avatar-wrapper {
@@ -141,6 +145,8 @@
     img {
       width: 100%;
       border-radius: 50%;
+      object-fit: cover;
+      height: 100%;
     }
   }
   .--active {
@@ -148,6 +154,8 @@
   }
   .avatar-name {
     font-size: 14px;
+    width: 50px;
+    text-align: center;
   }
 }
 
@@ -257,5 +265,40 @@
       background: #ffd65c;
       border-color: transparent;
     }
+  }
+}
+
+.date {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  button {
+    background: #fff;
+    border: 1px solid #000;
+    border-radius: 4px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    min-width: 80px;
+  }
+  .--activated {
+    background: $primary-color;
+    border: none;
+  }
+}
+
+.form__group {
+  padding: 0 0 10px 18px;
+  .text-desc {
+    border-radius: 10px;
+    resize: none;
+    padding: 7px 0 7px 12px;
+    outline: none;
+    font-size: 14px;
   }
 }

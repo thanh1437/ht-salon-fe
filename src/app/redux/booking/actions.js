@@ -11,6 +11,12 @@ export const getService = createActions({
   changeStatusService: (payload) => payload,
 });
 
+export const getStylist = createActions({
+  getStylistRequest: (payload) => payload,
+  getStylistSuccess: (payload) => payload,
+  getStylistFailure: (payload) => payload,
+});
+
 export const getDataSubmit = createActions({
   changeDataSubmit: (payload) => payload,
 });

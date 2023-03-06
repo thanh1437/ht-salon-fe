@@ -19,10 +19,17 @@ export default function CardItem({ title, data, onClick, type }) {
           data.map((item) => (
             <Grid item md={6} key={item.name + item.id}>
               <div className={cx("tab-card-item")}>
-                <img src={item.image} alt="" />
+                <img
+                  src={
+                    item.image
+                      ? item.image
+                      : "https://s3.ap-southeast-1.amazonaws.com/storage.30shine.com/service/combo_booking/701.jpg"
+                  }
+                  alt=""
+                />
                 <div className={cx("item-detail")}>
                   <div>
-                    <span>{item.name}</span>
+                    <span className="text-capitalize">{item.name}</span>
                     <p>{item.description}</p>
                   </div>
                   <div>

@@ -8,7 +8,7 @@ const cx = classNames.bind(styles);
 export default function Footer() {
   return (
     <div className={cx("header")}>
-      <div className={cx("wrapper")}>Develop by HairStyleTeam</div>
+      <div className={cx("wrapper")}>Thiết kế bởi HTSalon</div>
     </div>
   );
 }

@@ -9,15 +9,21 @@ export const navigation = [
     children: null,
   },
   {
-    title: "Quản lý dịch vụ và combo",
+    title: "Quản lý dịch vụ",
     icon: <SchoolRounded />,
-    path: routes.admin.courses,
+    path: routes.admin.services,
+    children: null,
+  },
+  {
+    title: "Quản lý combo",
+    icon: <SchoolRounded />,
+    path: routes.admin.combos,
     children: null,
   },
   {
     title: "Quản lý lịch cắt tóc",
     icon: <Category />,
-    path: routes.admin.topics,
+    path: routes.admin.calendar,
     children: null,
   },
   {

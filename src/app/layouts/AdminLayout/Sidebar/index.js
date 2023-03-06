@@ -53,7 +53,7 @@ export default function Sidebar({ shrink }) {
         <div className={cx("logo", "logo-default", "hide")}>
           <Link to={routes.admin.dashboard}>
             <img
-              src={IMAGE_PATH + "/30shine_nobg.png"}
+              src={IMAGE_PATH + "/HT.png"}
               alt="Logo"
               className="h-100 w-100"
             />
@@ -62,7 +62,7 @@ export default function Sidebar({ shrink }) {
         <div className={cx("logo", "logo-small", "hide")}>
           <Link to={routes.admin.dashboard}>
             <img
-              src={IMAGE_PATH + "/30shine_nobg.png"}
+              src={IMAGE_PATH + "/HT.png"}
               alt="Logo"
               className="h-100 w-100"
             />

@@ -181,6 +181,7 @@ export default function History() {
       editable: false,
     },
     {
+      field: "",
       minWidth: 150,
       sortable: false,
       headerAlign: "center",

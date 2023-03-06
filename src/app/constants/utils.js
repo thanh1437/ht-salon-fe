@@ -35,3 +35,33 @@ export const convertRelativeTime = (time) => {
     return Math.round(elapsed / msPerYear) + " năm";
   }
 };
+
+export const decodeJWT = (token) => {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+  return JSON.parse(jsonPayload);
+};
+
+export const catchingPromise = (error) => {
+  const { status } = error;
+  console.log(error);
+  switch (status) {
+    case 500:
+      return "Lỗi hệ thống";
+    case 401:
+      return "Bạn hãy đăng nhập để sử dụng tính năng này";
+    case 403:
+      return "Bạn không có quyền truy cập";
+    default:
+      return error.data.message;
+  }
+};

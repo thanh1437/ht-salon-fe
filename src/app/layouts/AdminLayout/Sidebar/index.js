@@ -9,6 +9,7 @@ import { IMAGE_PATH } from "../../../appConfig";
 
 import classNames from "classnames/bind";
 import styles from "./Sidebar.module.scss";
+import { decodeJWT } from "../../../constants/utils";
 
 const cx = classNames.bind(styles);
 
@@ -71,59 +72,69 @@ export default function Sidebar({ shrink }) {
       </div>
       <Scrollbar options={{ suppressScrollY }}>
         <ul className="h-100">
-          {navigation.map((item, index) => (
-            <li className={cx("sidebar-item")} key={item.title}>
-              <NavLink
-                to={item.children ? "" : item.path}
-                className={({ isActive }) =>
-                  cx(
-                    "item-link",
-                    "item--dropdown",
-                    !item.children && isActive ? "link--active" : ""
-                  )
-                }
-                onClick={() => handleClickLink(index)}
-              >
-                <div className="d-flex-align-center">
-                  {item.icon}
-                  <span className={cx("menu-title")}>{item.title}</span>
-                </div>
+          {navigation.map((item, index) => {
+            const role = decodeJWT(
+              localStorage.getItem("access_token")
+            ).authorities.split(",")[0];
+            if (item.roles.includes(role)) {
+              return (
+                <li className={cx("sidebar-item")} key={item.title}>
+                  <NavLink
+                    to={item.children ? "" : item.path}
+                    className={({ isActive }) =>
+                      cx(
+                        "item-link",
+                        "item--dropdown",
+                        !item.children && isActive ? "link--active" : ""
+                      )
+                    }
+                    onClick={() => handleClickLink(index)}
+                  >
+                    <div className="d-flex-align-center">
+                      {item.icon}
+                      <span className={cx("menu-title")}>{item.title}</span>
+                    </div>
 
-                {item.children ? (
-                  linkIndex && linkIndex[index].active ? (
-                    <KeyboardArrowUp />
-                  ) : (
-                    <KeyboardArrowDown />
-                  )
-                ) : (
-                  ""
-                )}
-              </NavLink>
+                    {item.children ? (
+                      linkIndex && linkIndex[index].active ? (
+                        <KeyboardArrowUp />
+                      ) : (
+                        <KeyboardArrowDown />
+                      )
+                    ) : (
+                      ""
+                    )}
+                  </NavLink>
 
-              {item.children && (
-                <ul
-                  className={cx(
-                    "children",
-                    linkIndex && linkIndex[index].active && "activeLink"
+                  {item.children && (
+                    <ul
+                      className={cx(
+                        "children",
+                        linkIndex && linkIndex[index].active && "activeLink"
+                      )}
+                    >
+                      {item.children.map((child, index) => (
+                        <li key={child.title}>
+                          <NavLink
+                            to={child.path}
+                            className={({ isActive }) =>
+                              cx(
+                                "children-link",
+                                isActive ? "link--active" : ""
+                              )
+                            }
+                          >
+                            {child.icon}
+                            {child.title}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
                   )}
-                >
-                  {item.children.map((child, index) => (
-                    <li key={child.title}>
-                      <NavLink
-                        to={child.path}
-                        className={({ isActive }) =>
-                          cx("children-link", isActive ? "link--active" : "")
-                        }
-                      >
-                        {child.icon}
-                        {child.title}
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
+                </li>
+              );
+            }
+          })}
         </ul>
       </Scrollbar>
     </div>

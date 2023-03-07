@@ -14,6 +14,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 20px;
   a {
     align-self: center;
     color: #2f80ed;
@@ -69,12 +70,13 @@
   overflow: hidden;
   padding-right: 20px;
   border-radius: 8px;
-  img {
+  .has-img {
+    min-height: 420px;
     width: 100%;
     transition: all 0.2s ease-in-out;
   }
   &:hover {
-    img {
+    .has-img {
       transform: scale(1.02);
     }
   }
@@ -95,6 +97,9 @@
   display: flex;
   align-items: center;
   .container__item-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
     border-radius: 8px;
     margin-right: 10px;
     transition: all 0.2s ease-in-out;
@@ -112,5 +117,26 @@
     &:hover {
       transform: scale(1.02);
     }
+  }
+}
+
+.no-img {
+  width: 100%;
+  min-height: 420px;
+  border: 1px solid #000;
+  border-radius: 8px;
+  position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  span {
+    position: absolute;
+    display: block;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 14px;
   }
 }

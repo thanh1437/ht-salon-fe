@@ -53,7 +53,6 @@ export const decodeJWT = (token) => {
 
 export const catchingPromise = (error) => {
   const { status } = error;
-  console.log(error);
   switch (status) {
     case 500:
       return "Lỗi hệ thống";

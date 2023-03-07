@@ -53,37 +53,57 @@ export default function MainBooking({ onSubmit, onClick }) {
   const handleChooseStyList = (id) => {
     dispatch(
       actions.getDataSubmit.changeDataSubmit({
-        ChooseUserId: id,
+        chooseUserId: id,
       })
     );
+    if (dataSubmit.startTime) {
+      const { chooseUserId, startTime, serviceIds } = dataSubmit;
+      console.log(startTime);
+      checkDateEmployee({
+        userId: chooseUserId,
+        date: startTime,
+        serviceIds: serviceIds.map((item) => item.id),
+      }).then(({ data }) => {
+        setDataDate(data);
+      });
+    }
   };
 
   const handleChangeDate = (newValue) => {
+    const { $D, $M, $y } = newValue;
+    const newDay = $D < 10 ? "0" + $D : $D;
+    const newMonth = $M + 1 < 10 ? "0" + ($M + 1) : $M + 1;
+
     setValue(newValue);
     dispatch(
       actions.getDataSubmit.changeDataSubmit({
-        startTime: moment(newValue).format("DD/MM/YYYY hh:ss"),
+        startTime: `${newDay}/${newMonth}/${$y}`,
       })
     );
-    const { ChooseUserId, startTime, serviceIds } = dataSubmit;
-    const token = localStorage.getItem("access_token");
-    checkDateEmployee(
-      {
-        userId: ChooseUserId,
-        date: moment(newValue).format("DD/MM/YYYY"),
-        serviceIds: serviceIds.map((item) => item.id),
-      },
-      token
-    ).then(({ data }) => {
+    const { chooseUserId, serviceIds } = dataSubmit;
+    checkDateEmployee({
+      userId: chooseUserId,
+      date: `${newDay}/${newMonth}/${$y}`,
+      serviceIds: serviceIds.map((item) => item.id),
+    }).then(({ data }) => {
       setDataDate(data);
     });
+  };
+
+  const handleChangeTime = (index, value) => {
+    setDateActive(index);
+    dispatch(
+      actions.getDataSubmit.changeDataSubmit({
+        startTime: dataSubmit.startTime + " " + value,
+      })
+    );
   };
 
   const handleOpenDateDialog = () => {
     if (
       dataSubmit.serviceIds.length ||
       dataSubmit.comboIds.length ||
-      dataSubmit.ChooseUserId
+      dataSubmit.chooseUserId
     ) {
       setDateDialog(true);
     } else {
@@ -151,7 +171,7 @@ export default function MainBooking({ onSubmit, onClick }) {
           <div
             className={cx(
               "card-content-block",
-              (dataSubmit.ChooseUserId || dataSubmit.ChooseUserId === 0) &&
+              (dataSubmit.chooseUserId || dataSubmit.chooseUserId === 0) &&
                 "--active"
             )}
           >
@@ -167,12 +187,12 @@ export default function MainBooking({ onSubmit, onClick }) {
                 />
               </div>
               <span className={cx("content-choose-text")}>
-                {dataSubmit.ChooseUserId || dataSubmit.ChooseUserId === 0
+                {dataSubmit.chooseUserId || dataSubmit.chooseUserId === 0
                   ? `StyList: ${
-                      dataSubmit.ChooseUserId === 0
+                      dataSubmit.chooseUserId === 0
                         ? "Salon sẽ chọn giúp bạn"
                         : stylists.find(
-                            (item) => item.id === dataSubmit.ChooseUserId
+                            (item) => item.id === dataSubmit.chooseUserId
                           ).name
                     }`
                   : "Xem tất cả style"}
@@ -192,7 +212,7 @@ export default function MainBooking({ onSubmit, onClick }) {
                   <div
                     className={cx(
                       "avatar-wrapper",
-                      dataSubmit.ChooseUserId === 0 && "--active"
+                      dataSubmit.chooseUserId === 0 && "--active"
                     )}
                   >
                     <img
@@ -211,7 +231,7 @@ export default function MainBooking({ onSubmit, onClick }) {
                       key={item.id}
                       className={cx(
                         "avatar-wrapper",
-                        dataSubmit.ChooseUserId === item.id && "--active"
+                        dataSubmit.chooseUserId === item.id && "--active"
                       )}
                     >
                       <img
@@ -249,7 +269,7 @@ export default function MainBooking({ onSubmit, onClick }) {
                 />
               </div>
               <span className={cx("content-choose-text", "text-capitalize")}>
-                {moment(value.$d).locale("vi").format("LLLL")}
+                {moment(value.$d).locale("vi").format("L")}
               </span>
               <img
                 src="https://30shine.com/static/media/caretRight.b0d191b3.svg"
@@ -260,7 +280,7 @@ export default function MainBooking({ onSubmit, onClick }) {
               <div className={cx("date")}>
                 {dataDate.map((item, index) => (
                   <button
-                    onClick={() => setDateActive(index)}
+                    onClick={() => handleChangeTime(index, item)}
                     className={cx(dateActive === index && "--activated")}
                   >
                     {item}

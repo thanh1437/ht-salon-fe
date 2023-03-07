@@ -19,4 +19,5 @@ export const getStylist = createActions({
 
 export const getDataSubmit = createActions({
   changeDataSubmit: (payload) => payload,
+  resetDataSubmit: (payload) => payload,
 });

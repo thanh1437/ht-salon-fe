@@ -15,28 +15,22 @@ const setSession = (user) => {
 };
 
 function* loginSaga(action) {
+  const { username, password, deviceInfo, navigate } = action.payload;
   try {
-    const user = yield call(login, { ...action.payload });
+    const user = yield call(login, { username, password, deviceInfo });
     console.log(user);
     const userInfo = user.data;
-    console.log(decodeJWT(userInfo.accessToken));
     setSession(userInfo);
     yield put(actions.getLogin.getLoginSuccess(userInfo));
-    window.location.reload();
-    // yield call(() => {
-    //   navigate(routes.home);
-    // });
-    // if (userInfo.user.status === 3) {
-    //   yield put(actions.getLogin.getLoginNotActive(userInfo));
-    // } else if (userInfo.user.status === 0) {
-    //   yield put(actions.getLogin.getLoginBanned(userInfo));
-    // } else {
-    //   //   setSession(userInfo);
-    //   //   yield put(actions.getLogin.getLoginSuccess(userInfo));
-    //   //   yield call(() => {
-    //   //     navigate(routes.home);
-    //   //   });
-    // }
+    const role = decodeJWT(userInfo.accessToken).authorities;
+    yield call(() => {
+      if (role === "ROLE_ADMIN" || role === "ROLE_EMPLOYEE") {
+        navigate(routes.admin.dashboard);
+      } else {
+        navigate(routes.home);
+        window.location.reload();
+      }
+    });
   } catch (error) {
     let message;
     switch (error.response.status) {

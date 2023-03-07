@@ -3,30 +3,33 @@ import { useNavigate } from "react-router-dom";
 // Material Library
 import { Alert, Box, LinearProgress, Stack } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Add, Edit } from "@mui/icons-material";
 // Component
 import CustomIconAction from "../../components/Share/CustomIconAction";
 import CustomizationSearch from "../../components/Search/CustomizationSearch";
 import CustomBreadcrumbs from "../../components/Share/CustomBreadcrumbs";
 import CustomButton from "../../components/Share/CustomButton";
+// Service
+import {
+  createAccount,
+  getAccounts,
+  updateAccount,
+} from "../../service/service";
+
+import { ToastContext } from "../../context/ToastContextProvider";
 import CustomDialog from "../../components/Share/CustomDialog";
 import FormTextField from "../../components/TextField/FormTextField";
 import CustomChip from "../../components/Share/CustomChip";
-// Service
-import { getCombos, getServices } from "../../service/booking.js";
-import { createCombo } from "../../service/service";
-
-import { ToastContext } from "../../context/ToastContextProvider";
-import { catchingPromise } from "../../constants/utils";
 
 import classNames from "classnames/bind";
 import styles from "./Admin.module.scss";
+import { catchingPromise } from "../../constants/utils";
+import moment from "moment/moment";
 
 const cx = classNames.bind(styles);
 
-export default function ComboList() {
+export default function ListAccount() {
   const inputRef = useRef();
-  const navigate = useNavigate();
   const [dataForm, setDataForm] = useState([]);
   const [dataSearch, setDataSearch] = useState({ searchText: "" });
   const context = useContext(ToastContext);
@@ -34,11 +37,9 @@ export default function ComboList() {
   const [dataSubmit, setDataSubmit] = useState(null);
   const [notification, setNotification] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [dataCombo, setDataCombo] = useState(null);
-  const [isOpenService, setIsOpenService] = useState(false);
 
   useEffect(() => {
-    document.title = "Danh sách gói | HTSalon";
+    document.title = "Danh sách tài khoản | HTSalon";
   }, []);
 
   useEffect(() => {
@@ -46,12 +47,9 @@ export default function ComboList() {
   }, [dataSearch]);
 
   const fetchData = async () => {
-    const token = localStorage.getItem("access_token");
-    await getCombos({}, token).then(({ data }) => {
+    setLoading(true);
+    await getAccounts({}).then(({ data }) => {
       setDataForm(data.content);
-      getServices({}, token).then(({ data }) => {
-        setDataCombo(data.content);
-      });
       setLoading(false);
     });
   };
@@ -61,32 +59,53 @@ export default function ComboList() {
   };
 
   const handleSubmitForm = () => {
-    createCombo({
-      ...dataSubmit,
-      serviceIds: dataSubmit.serviceDtos.map((item) => item.id),
-    })
-      .then((data) => {
-        context.setDataAlert({
-          ...context.dataAlert,
-          isOpen: true,
-          message: dataSubmit?.id ? "Sửa thành công!" : "Thêm thành công!",
-          status: "success",
+    if (dataSubmit?.id) {
+      const role = dataSubmit.role ? dataSubmit.role : dataSubmit.roles[0].name;
+      updateAccount({ ...dataSubmit, role })
+        .then((data) => {
+          console.log(data);
+          context.setDataAlert({
+            ...context.dataAlert,
+            isOpen: true,
+            message: "Sửa thành công!",
+            status: "success",
+          });
+          setDialogForm(false);
+          fetchData();
+          handleClearForm();
+        })
+        .catch((err) => {
+          setNotification({
+            name: catchingPromise(err.response),
+            status: "error",
+          });
         });
-        fetchData();
-        handleCloseForm();
-      })
-      .catch((err) => {
-        setNotification({
-          name: catchingPromise(err.response),
-          status: "error",
+    } else {
+      createAccount(dataSubmit)
+        .then((data) => {
+          console.log(data);
+          context.setDataAlert({
+            ...context.dataAlert,
+            isOpen: true,
+            message: "Thêm thành công!",
+            status: "success",
+          });
+          setDialogForm(false);
+          fetchData();
+          handleClearForm();
+        })
+        .catch((err) => {
+          setNotification({
+            name: catchingPromise(err.response),
+            status: "error",
+          });
         });
-      });
+    }
   };
 
   const handleClearForm = () => {
     setDataSubmit(null);
     setNotification(null);
-    setIsOpenService(false);
   };
 
   const handleCloseForm = () => {
@@ -111,8 +130,12 @@ export default function ComboList() {
   };
 
   const handleChangeFilter = (event) => {
+    const name = event.target.name;
     setDataSubmit((preState) => {
-      return { ...preState, status: +event.target.value };
+      return {
+        ...preState,
+        [name]: name == "status" ? +event.target.value : event.target.value,
+      };
     });
   };
 
@@ -126,7 +149,7 @@ export default function ComboList() {
     const file = e.target.files[0];
     const base64 = await convertBase64(file);
     setDataSubmit((preState) => {
-      return { ...preState, image: base64 };
+      return { ...preState, photo: base64 };
     });
   };
 
@@ -143,57 +166,26 @@ export default function ComboList() {
     });
   };
 
-  const handleChooseService = (event) => {
-    const findData = dataCombo.find((item) => item.id === +event.target.value);
-    const findIndex = dataCombo.findIndex(
-      (item) => item.id === +event.target.value
-    );
-    if (dataSubmit) {
-      if (dataSubmit.serviceDtos) {
-        setDataSubmit((preState) => ({
-          ...preState,
-          serviceDtos: [...preState.serviceDtos, findData],
-        }));
-      } else {
-        setDataSubmit((preState) => ({
-          ...preState,
-          serviceDtos: [findData],
-        }));
-      }
-    } else {
-      setDataSubmit((preState) => ({
-        ...preState,
-        serviceDtos: [findData],
-      }));
-    }
-
-    dataCombo.splice(findIndex, 1);
-    setDataCombo(dataCombo);
-    setIsOpenService(false);
-  };
-
-  const handleRemoveRow = (id) => {
-    const findData = dataSubmit.serviceDtos.find((item) => item.id === id);
-    const findIndex = dataSubmit.serviceDtos.findIndex(
-      (item) => item.id === id
-    );
-    dataSubmit.serviceDtos.splice(findIndex, 1);
-    setDataSubmit((preState) => ({
-      ...preState,
-      serviceDtos: dataSubmit.serviceDtos,
-    }));
-
-    setDataCombo([...dataCombo, findData]);
-  };
-
   const status = [
     {
-      name: "Ẩn",
+      name: "Hoạt động",
       value: 0,
     },
     {
-      name: "Hiện",
+      name: "Không hoạt động",
       value: 1,
+    },
+  ];
+
+  const roles = [
+    {
+      name: "ROLE_ADMIN",
+    },
+    {
+      name: "ROLE_EMPLOYEE",
+    },
+    {
+      name: "ROLE_USER",
     },
   ];
 
@@ -213,12 +205,10 @@ export default function ComboList() {
     },
     {
       field: "username",
-      minWidth: 380,
+      minWidth: 300,
       sortable: false,
       headerAlign: "center",
-      renderHeader: (params) => (
-        <span className="header-table">Tên dịch vụ</span>
-      ),
+      renderHeader: (params) => <span className="header-table">Tên</span>,
       renderCell: (params) => (
         <div className="normal-font row-center">{params.row.name}</div>
       ),
@@ -230,30 +220,61 @@ export default function ComboList() {
       sortable: false,
       editable: false,
       headerAlign: "center",
-      renderHeader: (params) => <span className="header-table">Giá</span>,
+      renderHeader: (params) => <span className="header-table">SĐT</span>,
       renderCell: (params) => (
-        <div className="normal-font row-center">{params.row.price}</div>
+        <div className="normal-font row-center">{params.row.mobile}</div>
+      ),
+    },
+    {
+      field: "photoURL",
+      minWidth: 150,
+      sortable: false,
+      editable: false,
+      headerAlign: "center",
+      renderHeader: (params) => <span className="header-table">Email</span>,
+      renderCell: (params) => (
+        <div className="normal-font d-flex-center w-100">
+          {params.row.email}
+        </div>
       ),
     },
     {
       field: "createdDate",
-      minWidth: 250,
+      minWidth: 220,
       sortable: false,
       headerAlign: "center",
       renderHeader: (params) => <span className="header-table">Ngày tạo</span>,
       renderCell: (params) => (
-        <div className="normal-font row-center">{params.row.createdDate}</div>
+        <div className="normal-font row-center">
+          {moment(params.row.createdDate).format("DD/MM/YYYY")}
+        </div>
       ),
       editable: false,
     },
     {
       field: "modifiedDate",
-      minWidth: 250,
+      minWidth: 220,
       sortable: false,
       headerAlign: "center",
       renderHeader: (params) => <span className="header-table">Ngày sửa</span>,
       renderCell: (params) => (
-        <div className="normal-font row-center">{params.row.modifiedDate}</div>
+        <div className="normal-font row-center">
+          {" "}
+          {moment(params.row.modifiedDate).format("DD/MM/YYYY")}
+        </div>
+      ),
+      editable: false,
+    },
+    {
+      field: "role",
+      minWidth: 200,
+      sortable: false,
+      headerAlign: "center",
+      renderHeader: (params) => <span className="header-table">Quyền</span>,
+      renderCell: (params) => (
+        <div className="normal-font row-center">
+          <CustomChip label={params.row.roles[0].name} color={null} />
+        </div>
       ),
       editable: false,
     },
@@ -268,8 +289,8 @@ export default function ComboList() {
       renderCell: (params) => (
         <div className="normal-font row-center">
           <CustomChip
-            label={params.row.status === 0 ? "Ẩn" : "Hiện"}
-            color={params.row.status === 1 ? "primary" : "error"}
+            label={params.row.status === 0 ? "Hoạt động" : "Không hoạt động"}
+            color={params.row.status === 0 ? "success" : null}
           />
         </div>
       ),
@@ -285,7 +306,7 @@ export default function ComboList() {
       renderCell: (params) => (
         <div>
           <CustomIconAction
-            label="Chi tiết"
+            label="Detail"
             arrow
             handleClick={() => handleOpenEditDialog(params.id)}
           >
@@ -299,13 +320,13 @@ export default function ComboList() {
 
   return (
     <div className="w-100">
-      <CustomBreadcrumbs routeSegments={[{ name: "Danh sách combo" }]} />
+      <CustomBreadcrumbs routeSegments={[{ name: "Danh sách tài khoản" }]} />
 
       <div className="d-flex-center-between mt-4">
         <div className="d-flex-center-between">
           <CustomButton
             handleClick={() => handleOpenDialog()}
-            title="Thêm combo"
+            title="Thêm tài khoản"
             startIcon={<Add />}
             fullWidth
             colorButton="primary"
@@ -320,13 +341,13 @@ export default function ComboList() {
                         ))}
                     </select> */}
           <CustomizationSearch
-            placeholder="Tìm kiếm combo..."
+            placeholder="Tìm kiếm tài khoản..."
             handleChangeSearch={handleChangeSearch}
           />
         </div>
       </div>
       <CustomDialog
-        title={dataSubmit?.id ? "Sửa combo" : "Thêm combo"}
+        title={dataSubmit?.id ? "Sửa tài khoản" : "Thêm tài khoản"}
         open={dialogForm}
         size="md"
         handleSubmit={handleSubmitForm}
@@ -342,38 +363,91 @@ export default function ComboList() {
         <div className={cx("dialog-content__header")}>
           <div className={cx("left")}>
             <FormTextField
-              label="Tên combo"
-              placeholder="Nhập tên combo"
+              label="Tên"
+              placeholder="Nhập tên"
               name="name"
               value={dataSubmit?.name}
               handleChangeText={handleChangeText}
             />
             <FormTextField
-              label="Giá"
-              placeholder="Nhập giá"
-              name="price"
-              type="number"
-              value={dataSubmit?.price}
+              label="Email"
+              placeholder="Nhập email"
+              name="email"
+              value={dataSubmit?.email}
               min={1}
               handleChangeText={handleChangeText}
             />
             <FormTextField
-              className={cx("orderByText")}
-              label="Độ ưu tiên"
-              name="orderBy"
-              type="number"
-              value={dataSubmit?.orderBy ? dataSubmit?.orderBy : 1}
-              min={1}
-              max={1000}
+              label="SĐT"
+              placeholder="Nhập số điện thoại"
+              name="mobile"
+              value={dataSubmit?.mobile}
               handleChangeText={handleChangeText}
             />
+            <FormTextField
+              label="Tài khoản"
+              placeholder="Nhập tài khoản"
+              name="username"
+              value={dataSubmit?.username}
+              handleChangeText={handleChangeText}
+              disabled={dataSubmit?.id}
+            />
+            {!dataSubmit?.id && (
+              <FormTextField
+                label="Mật khẩu"
+                placeholder="Nhập mật khẩu"
+                name="password"
+                type="password"
+                value={dataSubmit?.password}
+                handleChangeText={handleChangeText}
+              />
+            )}
+            <div className={cx("form-group")}>
+              <label htmlFor="abc" className={cx("form-title")}>
+                Quyền
+              </label>
+              {dataSubmit?.roles ? (
+                <select
+                  className={cx("filter", "mr-3")}
+                  name="role"
+                  onChange={handleChangeFilter}
+                >
+                  {roles.map((item, index) => (
+                    <option
+                      key={index}
+                      value={item.name}
+                      selected={
+                        dataSubmit?.roles[0].name === item.name
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <select
+                  className={cx("filter", "mr-3")}
+                  name="role"
+                  onChange={handleChangeFilter}
+                >
+                  {roles.map((item, index) => (
+                    <option key={index} value={item.name}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {/* {error && <span className={cx('text-danger')}>{helperText}</span>} */}
+            </div>
             <div className={cx("form-group")}>
               <label htmlFor="abc" className={cx("form-title")}>
                 Trạng thái
               </label>
               <select
                 className={cx("filter", "mr-3")}
-                name="filter"
+                name="status"
                 onChange={handleChangeFilter}
               >
                 {status.map((item, index) => (
@@ -398,14 +472,15 @@ export default function ComboList() {
                 Ảnh
               </label>
               <div>
-                {dataSubmit?.image ? (
+                {/* <img src={dataSubmit?.image} alt="" /> */}
+                {dataSubmit?.photo ? (
                   <div
                     className={cx("img")}
                     onClick={() => {
                       inputRef.current.click();
                     }}
                   >
-                    <img src={dataSubmit?.image} alt="" />
+                    <img src={dataSubmit?.photo} alt="" />
                     <input
                       ref={inputRef}
                       onChange={changeHandler}
@@ -440,61 +515,6 @@ export default function ComboList() {
             </div>
           </div>
         </div>
-        <div>
-          <button
-            className={cx("service-btn")}
-            onClick={() => setIsOpenService(true)}
-          >
-            Thêm dịch vụ
-          </button>
-          {dataCombo && isOpenService && (
-            <select
-              className={cx("filter", "mr-3")}
-              name="filter"
-              onChange={handleChooseService}
-            >
-              {dataCombo.map((item) => (
-                <option key={item.code} value={item.id}>
-                  {item.name + " - " + item.code}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-        {dataSubmit?.serviceDtos && (
-          <table border={1} className={cx("dialog-table")}>
-            <thead>
-              <tr>
-                <th>STT</th>
-                <th>Dịch vụ</th>
-                <th>Số tiền</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dataSubmit?.serviceDtos.map((item, index) => (
-                <tr key={item.code}>
-                  <td>{index + 1}</td>
-                  <td className="text-center">
-                    {item.name} - {item.code}
-                  </td>
-                  <td className="text-center">{item.price}đ</td>
-                  <td>
-                    <button>
-                      <CustomIconAction
-                        label="Xóa"
-                        arrow
-                        handleClick={() => handleRemoveRow(item.id)}
-                      >
-                        <Delete className="text-danger icon" />
-                      </CustomIconAction>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
       </CustomDialog>
 
       <Box sx={{ height: 640, width: "100%", marginTop: "20px" }}>
@@ -506,15 +526,15 @@ export default function ComboList() {
             LoadingOverlay: LinearProgress,
             NoRowsOverlay: () => (
               <Stack height="100%" alignItems="center" justifyContent="center">
-                Không có combo nào đang tồn tại
+                Không có dịch vụ nào đang tồn tại
               </Stack>
             ),
           }}
           loading={loading}
+          rowsPerPageOptions={[10]}
           getRowId={(row) => row.id}
           disableSelectionOnClick
           disableColumnFilter
-          rowsPerPageOptions={[10]}
           disableColumnMenu
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even-row" : "odd-row"

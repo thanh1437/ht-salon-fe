@@ -53,9 +53,7 @@ export default function ServiceBooking({ onClick, onClose, onSubmit }) {
     checkDisable();
     const token = localStorage.getItem("access_token");
     if (token) {
-      getServices({}, token).then(({ data }) => {
-        console.log(data);
-      });
+      getServices({}, token);
     } else {
       toast.setDataAlert({
         ...toast.dataAlert,

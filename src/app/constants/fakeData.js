@@ -23,7 +23,7 @@ export const carouselHome = [
 
 export const service = [
   {
-    title: "Trải nghiệm dịch vụ",
+    title: "Trải nghiệm combo siêu hấp dẫn",
     describe: "Thư giãn 30 phút và bạn sẽ tỏa sáng",
     more: "/",
     banner:
@@ -56,7 +56,7 @@ export const service = [
     ],
   },
   {
-    title: "TOP 1 dịch vụ được yêu thích nhất",
+    title: "Trải nghiệm dịch vụ",
     describe:
       "30Shine - Tự hào lan tỏa phong cách uốn tóc Hàn Quốc tới nam giới Việt",
     more: null,
@@ -116,23 +116,23 @@ export const employee = [
 
 export const styleList = [
   {
-    name: "Nguyễn văn Tuấn",
-    image:
+    name: "Nguyễn Văn Tuấn",
+    photo:
       "https://storage.30shine.com/ResourceWeb/data/images/home/stylist/1.jpg?v=2",
   },
   {
     name: "Nguyễn Đỗ Bảo Thanh",
-    image:
+    photo:
       "https://storage.30shine.com/ResourceWeb/data/images/home/stylist/2.jpg?v=2",
   },
   {
     name: "Nguyễn Tiến Dũng",
-    image:
+    photo:
       "https://storage.30shine.com/ResourceWeb/data/images/home/stylist/3.jpg?v=2",
   },
   {
     name: "Nguyễn Đỗ Bảo Thanh",
-    image:
+    photo:
       "https://storage.30shine.com/ResourceWeb/data/images/home/stylist/4.jpg?v=2",
   },
 ];

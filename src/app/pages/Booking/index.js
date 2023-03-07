@@ -5,15 +5,17 @@ import * as actions from "../../redux/booking/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { createBooking } from "../../service/booking";
 import { ToastContext } from "../../context/ToastContextProvider";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../config/index";
 
 import classNames from "classnames/bind";
 import styles from "./Booking.module.scss";
-import moment from "moment";
 
 const cx = classNames.bind(styles);
 
 export default function Booking() {
   const toast = useContext(ToastContext);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isMounting, setIsMounting] = useState(false);
   const [serviceDialog, setServiceDialog] = useState(false);
@@ -43,12 +45,20 @@ export default function Booking() {
       createBooking(
         {
           ...dataSubmit,
+          takePhoto: dataSubmit.takePhoto ? 1 : 0,
           serviceIds: dataSubmit.serviceIds.map((item) => item.id),
           comboIds: dataSubmit.comboIds.map((item) => item.id),
         },
         token
       ).then((data) => {
-        console.log(data);
+        dispatch(actions.getDataSubmit.resetDataSubmit());
+        toast.setDataAlert({
+          ...toast.dataAlert,
+          isOpen: true,
+          message: "Bạn đã đặt lịch thành công",
+          status: "success",
+        });
+        navigate(routes.history);
       });
     } else {
       toast.setDataAlert({
@@ -62,9 +72,9 @@ export default function Booking() {
 
   return (
     <div className={cx("wrapper")}>
-      <div className={cx("inner")}>
-        {isMounting &&
-          (serviceDialog ? (
+      {isMounting && (
+        <div className={cx("inner")}>
+          {serviceDialog ? (
             <ServiceBooking
               onClose={handleCloseService}
               onSubmit={handleSubmitService}
@@ -74,8 +84,9 @@ export default function Booking() {
               onSubmit={handleSubmitForm}
               onClick={handleChooseService}
             />
-          ))}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

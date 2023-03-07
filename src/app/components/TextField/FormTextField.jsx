@@ -16,6 +16,7 @@ export default function FormTextField(props) {
     type = "text",
     min,
     max,
+    disabled = false,
   } = props;
 
   return (
@@ -32,6 +33,7 @@ export default function FormTextField(props) {
         onChange={handleChangeText}
         min={type === "number" && min}
         max={type === "number" && max}
+        disabled={disabled ? "disabled" : ""}
       />
 
       {/* {error && <span className={cx('text-danger')}>{helperText}</span>} */}

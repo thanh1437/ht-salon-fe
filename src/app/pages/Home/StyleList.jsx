@@ -12,6 +12,7 @@ import {
   ArrowBackIosOutlined,
   ArrowForwardIosOutlined,
 } from "@mui/icons-material";
+import { IMAGE_PATH } from "../../appConfig";
 
 const cx = classNames.bind(styles);
 
@@ -95,13 +96,17 @@ export default function StyleList({ title, des, data, more }) {
             partialVisible={true}
           >
             {data.map((item) => (
-              <div className={cx("container__banner-item")} key={item.image}>
+              <div className={cx("container__banner-item")} key={item.id}>
                 <Link to="/">
-                  <img src={item.image} alt="" />
-                  <span>
-                    Chelsea Park, 116 Trung Kính, P. Yên Hòa, Q. Cầu Giấy, Hà
-                    Nội
-                  </span>
+                  {item.photo ? (
+                    <img src={item.photo} alt="" className={cx("has-img")} />
+                  ) : (
+                    <div className={cx("no-img")}>
+                      <img src={IMAGE_PATH + "/no-data.png"} alt="" />
+                      <span>Thợ này hiện chưa có ảnh</span>
+                    </div>
+                  )}
+                  <span>{item.name}</span>
                 </Link>
               </div>
             ))}

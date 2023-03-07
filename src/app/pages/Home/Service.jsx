@@ -1,17 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Grid } from "@mui/material";
-import { service } from "../../constants/fakeData";
+import { convertNumber } from "../../constants/utils";
 
 import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
 
 const cx = classNames.bind(styles);
 
-export default function Service() {
+export default function Service({ data }) {
   return (
     <>
-      {service.map((item) => (
+      {data.map((item) => (
         <div className={cx("wrapper")}>
           <div className={cx("container")}>
             <div className={cx("container__header")}>
@@ -19,15 +19,6 @@ export default function Service() {
                 <h1>{item.title}</h1>
                 <p>{item.describe}</p>
               </div>
-              {item.more && (
-                <Link to={item.more}>
-                  Xem tất cả{" "}
-                  <img
-                    src="https://30shine.com/static/media/chevronRight.0f447c60.svg"
-                    alt=""
-                  ></img>
-                </Link>
-              )}
             </div>
             <div className={cx("container__banner")}>
               <Link to="/">
@@ -48,8 +39,8 @@ export default function Service() {
                       className={cx("container__item-img")}
                     />
                     <div>
-                      <h3>{other.title}</h3>
-                      <p>{other.describe}</p>
+                      <h3>{other.name}</h3>
+                      <p>Giá: {convertNumber(other.price)}</p>
                     </div>
                   </div>
                 </Grid>

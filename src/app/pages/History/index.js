@@ -6,7 +6,7 @@ import {
   useGridApiContext,
   useGridSelector,
 } from "@mui/x-data-grid";
-import { Box, Pagination, Rating, Stack } from "@mui/material";
+import { Box, LinearProgress, Pagination, Rating, Stack } from "@mui/material";
 import moment from "moment/moment";
 import CustomChip from "../../components/Share/CustomChip";
 import CustomIconAction from "../../components/Share/CustomIconAction";
@@ -18,6 +18,9 @@ import { routes } from "../../config";
 
 import classNames from "classnames/bind";
 import styles from "./History.module.scss";
+import { useEffect } from "react";
+import { searchByPageBooking } from "../../service/service";
+import { convertNumber } from "../../constants/utils";
 
 const cx = classNames.bind(styles);
 
@@ -47,57 +50,22 @@ const status = {
 export default function History() {
   const [openDialog, setOpenDialog] = useState(false);
   const [dataDialog, setDataDialog] = useState(null);
-  const [dataForm, setDataForm] = useState([
-    {
-      id: 1,
-      dateCreated: "23/02/2022",
-      stylist: "Nguyen Trong An",
-      rate: 4,
-      combo: [
-        {
-          name: "Combo cắt tóc gội đầu",
-          total: 100000,
-        },
-      ],
-      total: 0,
-      status: 0,
-      image: null,
-    },
-    {
-      id: 2,
-      dateCreated: "23/02/2022",
-      stylist: "Nguyen Trong Ban",
-      rate: 4,
-      combo: [
-        {
-          name: "Combo cắt tóc gội đầu",
-          total: 100000,
-        },
-      ],
-      total: 0,
-      status: 2,
-      image: null,
-    },
-    {
-      id: 3,
-      dateCreated: "23/02/2022",
-      stylist: "Nguyen Trong Can",
-      rate: 4,
-      combo: [
-        {
-          name: "Combo cắt tóc gội đầu",
-          total: 100000,
-        },
-      ],
-      total: 0,
-      status: 1,
-      image:
-        "https://storage.30shine.com/ResourceWeb/data/images/home/stylist/2.jpg?v=2",
-    },
-  ]);
+  const [dataForm, setDataForm] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    await searchByPageBooking().then(({ data }) => {
+      setDataForm(data.content);
+      setLoading(false);
+    });
+  };
 
   const handleOpenEditDialog = (data) => {
-    // console.log(id);
     setDataDialog(data);
     setOpenDialog(true);
   };
@@ -127,9 +95,7 @@ export default function History() {
       headerAlign: "center",
       renderHeader: (params) => <span className="header-table">Ngày cắt</span>,
       renderCell: (params) => (
-        <div className="normal-font row-center">
-          {moment(params.row.created_at).utc().format("DD/MM/YYYY HH:mm:ss")}
-        </div>
+        <div className="normal-font row-center">{params.row.startTime}</div>
       ),
       editable: false,
     },
@@ -141,7 +107,7 @@ export default function History() {
       headerAlign: "center",
       renderHeader: (params) => <span className="header-table">Stylist</span>,
       renderCell: (params) => (
-        <div className="normal-font row-center">{params.row.stylist}</div>
+        <div className="normal-font row-center">{params.row.chooseUser}</div>
       ),
     },
     {
@@ -150,7 +116,9 @@ export default function History() {
       sortable: false,
       editable: false,
       headerAlign: "center",
-      renderHeader: (params) => <span className="header-table">Đánh giá</span>,
+      renderHeader: (params) => (
+        <span className="header-table">Trạng thái</span>
+      ),
       renderCell: (params) => (
         <div className="normal-font d-flex-center w-100">
           {params.row.status === 0 ? (
@@ -176,7 +144,9 @@ export default function History() {
         <span className="header-table">Thành tiền</span>
       ),
       renderCell: (params) => (
-        <div className="normal-font row-center">{params.row.total}</div>
+        <div className="normal-font row-center">
+          {convertNumber(params.row.totalPrice)}
+        </div>
       ),
       editable: false,
     },
@@ -196,9 +166,6 @@ export default function History() {
           >
             <RemoveRedEyeRounded className="text-primary icon" />
           </CustomIconAction>
-          {/* <CustomIconAction label="Delete" arrow handleClick={() => handleRemoveRow(params.id)}>
-                        <DeleteRounded className="text-danger icon" />
-                    </CustomIconAction> */}
         </div>
       ),
       editable: false,
@@ -220,8 +187,8 @@ export default function History() {
               className="quesTable"
               rows={dataForm}
               columns={columns}
-              //   checkboxSelection
               components={{
+                LoadingOverlay: LinearProgress,
                 NoRowsOverlay: () => (
                   <Stack
                     height="100%"
@@ -233,6 +200,7 @@ export default function History() {
                 ),
                 Pagination: CustomPagination,
               }}
+              loading={loading}
               pagination
               pageSize={10}
               rowsPerPageOptions={[10]}
@@ -241,7 +209,6 @@ export default function History() {
               disableColumnFilter
               disableColumnMenu
               hideFooterRowCount
-              //   onSelectionModelChange={handleChangeSelection}
               getRowClassName={(params) =>
                 params.indexRelativeToCurrentPage % 2 === 0
                   ? "even-row"
@@ -264,13 +231,13 @@ export default function History() {
                 <div className={cx("content__wrapper")}>
                   <h3>Ngày cắt:</h3>
                   <span className={cx("content__wrapper-text")}>
-                    {dataDialog.dateCreated}
+                    {dataDialog.startTime}
                   </span>
                 </div>
                 <div className={cx("content__wrapper")}>
                   <h3>Stylist:</h3>
                   <span className={cx("content__wrapper-text")}>
-                    {dataDialog.stylist}
+                    {dataDialog.chooseUser}
                   </span>
                 </div>
                 <div>
@@ -305,10 +272,10 @@ export default function History() {
               <div className={cx("right")}>
                 <h3>Ảnh sau khi cắt:</h3>
                 <div>
-                  {dataDialog.image ? (
+                  {dataDialog.takePhoto ? (
                     <img
                       className={cx("img-after-cut")}
-                      src={dataDialog.image}
+                      src={dataDialog.photo}
                       alt=""
                       width={150}
                       height={200}
@@ -322,28 +289,30 @@ export default function History() {
                 </div>
               </div>
             </div>
-            <table border={1} className={cx("dialog-table")}>
-              <thead>
-                <tr>
-                  <th>STT</th>
-                  <th>Dịch vụ</th>
-                  <th>Số tiền</th>
-                </tr>
-              </thead>
-              <tbody>
-                {dataDialog.combo.map((item, index) => (
-                  <tr key={index + "a"}>
-                    <td>{index + 1}</td>
-                    <td className="pl-2">{item.name}</td>
-                    <td>{item.total}đ</td>
+            {dataDialog.serviceDtos.length > 0 && (
+              <table border={1} className={cx("dialog-table")}>
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Dịch vụ</th>
+                    <th>Số tiền</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {dataDialog.serviceDtos.map((item) => (
+                    <tr key={item.code}>
+                      <td>{item.code}</td>
+                      <td className="text-center">{item.name}</td>
+                      <td>{item.price}đ</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
             <div className={cx("content__wrapper", "space-between")}>
               <h3>Thành tiền</h3>
               <span className={cx("content__wrapper-text")}>
-                {dataDialog.total}đ
+                {convertNumber(dataDialog.totalPrice)}
               </span>
             </div>
           </DialogForm>

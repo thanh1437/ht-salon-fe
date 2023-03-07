@@ -79,7 +79,6 @@ const LoginReducers = (state = initialState, action) => {
     }
 
     case getType(getLogout.getLogoutRequest): {
-      console.log("hihi");
       return { ...state, user: {} };
     }
     default:

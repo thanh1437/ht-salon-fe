@@ -33,6 +33,7 @@ export default function ServiceList() {
   const [dataSubmit, setDataSubmit] = useState(null);
   const [notification, setNotification] = useState(null);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     document.title = "Danh sách dịch vụ | HTSalon";
   }, []);
@@ -434,6 +435,7 @@ export default function ServiceList() {
           disableSelectionOnClick
           disableColumnFilter
           disableColumnMenu
+          rowsPerPageOptions={[10]}
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even-row" : "odd-row"
           }

@@ -1,14 +1,12 @@
 import React, { Fragment } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContextProvider } from "./app/context/ToastContextProvider";
-
-import { publicRoutes } from "./app/routes";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { privateRoutes, publicRoutes } from "./app/routes";
+import { ProtectedRoute } from "./app/routes/ProtectedRoute";
 
 export default function App() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
   return (
     <ToastContextProvider>
       <Routes>
@@ -21,9 +19,26 @@ export default function App() {
               key={index}
               path={route.path}
               element={
-                <Layout t={t}>
-                  <Page history={navigate} t={t} />
+                <Layout>
+                  <Page history={navigate} />
                 </Layout>
+              }
+            />
+          );
+        })}
+        {privateRoutes.map((route, index) => {
+          const Layout = route.layout === null ? Fragment : route.layout;
+          const Page = route.component;
+          return (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Page history={navigate} />
+                  </Layout>
+                </ProtectedRoute>
               }
             />
           );

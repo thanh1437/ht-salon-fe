@@ -4,9 +4,8 @@ import { getCombos, getServices, getStylists } from "../../service/booking";
 
 function* getServiceSaga(action) {
   try {
-    const token = localStorage.getItem("access_token");
-    let fetchService = yield call(getServices, {}, token);
-    let fetchCombo = yield call(getCombos, {}, token);
+    let fetchService = yield call(getServices, {});
+    let fetchCombo = yield call(getCombos, {});
     let newService = fetchService.data.content.map((item) => ({
       ...item,
       isChoose: false,
@@ -49,7 +48,6 @@ function* getStylistsSaga(action) {
   try {
     const token = localStorage.getItem("access_token");
     let fetchStylist = yield call(getStylists, {}, token);
-    console.log(fetchStylist);
     yield put(actions.getStylist.getStylistSuccess(fetchStylist.data));
   } catch (error) {
     let message;

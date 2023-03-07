@@ -4,11 +4,13 @@ import * as actions from "../../redux/auth/actions";
 
 import classNames from "classnames/bind";
 import styles from "./Auth.module.scss";
+import { useNavigate } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
 export default function Login({ onChangeLink }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [data, setData] = useState({
     username: null,
     password: null,
@@ -19,9 +21,8 @@ export default function Login({ onChangeLink }) {
   });
 
   const handleSubmit = (e) => {
-    console.log(data);
     e.preventDefault();
-    dispatch(actions.getLogin.getLoginRequest({ ...data }));
+    dispatch(actions.getLogin.getLoginRequest({ ...data, navigate }));
   };
 
   const handleChangeText = (event) => {

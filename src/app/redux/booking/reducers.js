@@ -9,7 +9,7 @@ const initialState = {
   service: null,
   stylists: null,
   dataSubmit: {
-    ChooseUserId: null,
+    chooseUserId: null,
     startTime: null,
     description: null,
     takePhoto: 0,
@@ -55,6 +55,21 @@ const BookingReducer = (state = initialState, action) => {
       return {
         ...state,
         dataSubmit: { ...state.dataSubmit, ...action.payload },
+        loading: false,
+        error: null,
+      };
+    }
+    case getType(getDataSubmit.resetDataSubmit): {
+      return {
+        ...state,
+        dataSubmit: {
+          chooseUserId: null,
+          startTime: null,
+          description: null,
+          takePhoto: 0,
+          serviceIds: [],
+          comboIds: [],
+        },
         loading: false,
         error: null,
       };

@@ -639,6 +639,7 @@ export default function BookingListAdmin() {
           getRowId={(row) => row.id}
           disableSelectionOnClick
           disableColumnFilter
+          rowsPerPageOptions={[10]}
           disableColumnMenu
           checkboxSelection
           isRowSelectable={(params) => params.row.status === 0}

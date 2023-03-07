@@ -20,7 +20,7 @@ class BarTotal extends React.Component {
         type: "column",
       },
       title: {
-        text: `Số ${this.props.type} được tạo trong tháng này`,
+        text: ``,
       },
 
       xAxis: {

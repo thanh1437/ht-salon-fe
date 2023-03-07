@@ -83,6 +83,9 @@ $height-input: 34px;
     padding: 10px 20px;
     font-size: 14px;
     margin-top: 5px;
+    &:disabled {
+      background: #dddddd;
+    }
   }
 }
 

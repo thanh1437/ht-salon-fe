@@ -14,7 +14,7 @@ export default function SignUps({ onChangeLink }) {
     username: null,
     password: null,
     email: null,
-    registerAsAdmin: false,
+    role: "ROLE_USER",
     name: null,
     mobile: null,
   });

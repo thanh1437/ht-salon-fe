@@ -102,7 +102,7 @@ export default function StyleList({ title, des, data, more }) {
                     <img src={item.photo} alt="" className={cx("has-img")} />
                   ) : (
                     <div className={cx("no-img")}>
-                      <img src={IMAGE_PATH + "/no-data.png"} alt="" />
+                      <img src={IMAGE_PATH + "/user.jpg"} alt="" />
                       <span>Thợ này hiện chưa có ảnh</span>
                     </div>
                   )}

@@ -41,10 +41,10 @@ function CustomPagination() {
 }
 
 const status = {
-  0: { title: "Chưa cắt", color: null },
-  1: { title: "Đã cắt", color: "primary" },
-  2: { title: "Đã hủy", color: "error" },
-  3: { title: "Đang chờ xác nhận", color: "secondary" },
+  0: { title: "Chờ xác nhận", color: null },
+  1: { title: "Đã xác nhận", color: "primary" },
+  2: { title: "Đã hoàn thành", color: "success" },
+  3: { title: "Đã hủy", color: "error" },
 };
 
 export default function History() {
@@ -60,6 +60,7 @@ export default function History() {
   const fetchData = async () => {
     setLoading(true);
     await searchByPageBooking().then(({ data }) => {
+      console.log(data.content)
       setDataForm(data.content);
       setLoading(false);
     });
@@ -122,15 +123,13 @@ export default function History() {
       renderCell: (params) => (
         <div className="normal-font d-flex-center w-100">
           {params.row.status === 0 ? (
-            <CustomChip label="Chưa cắt" color={null} />
+            <CustomChip label="Chờ xác nhận" color={null} />
+          ) : params.row.status === 1 ? (
+            <CustomChip label="Đã xác nhận" color="primary" />
           ) : params.row.status === 2 ? (
-            <CustomChip label="Đã hủy" color="error" />
+            <CustomChip label="Đã hoàn thành" color="success" />
           ) : (
-            <Rating
-              name="half-rating"
-              defaultValue={params.row.rate}
-              readOnly
-            />
+            <CustomChip label="Đã hủy" color="error" />
           )}
         </div>
       ),
@@ -255,18 +254,7 @@ export default function History() {
                     />
                   </span>
                 </div>
-                {dataDialog.status === 1 && (
-                  <div className={cx("content__wrapper")}>
-                    <h3>Đánh giá:</h3>
-                    <span className={cx("content__wrapper-text")}>
-                      <Rating
-                        name="half-rating"
-                        defaultValue={dataDialog.rate}
-                        readOnly
-                      />
-                    </span>
-                  </div>
-                )}
+                
               </div>
               <div className={cx("separate")}></div>
               <div className={cx("right")}>
@@ -289,7 +277,7 @@ export default function History() {
                 </div>
               </div>
             </div>
-            {dataDialog.serviceDtos.length > 0 && (
+            {(dataDialog.serviceDtos.length > 0 || dataDialog.comboDtos.length > 0) && (
               <table border={1} className={cx("dialog-table")}>
                 <thead>
                   <tr>
@@ -299,9 +287,9 @@ export default function History() {
                   </tr>
                 </thead>
                 <tbody>
-                  {dataDialog.serviceDtos.map((item) => (
-                    <tr key={item.code}>
-                      <td>{item.code}</td>
+                  {[...dataDialog.serviceDtos,...dataDialog.comboDtos].map((item,index) => (
+                    <tr key={item.id}>
+                      <td>{index + 1}</td>
                       <td className="text-center">{item.name}</td>
                       <td>{item.price}đ</td>
                     </tr>

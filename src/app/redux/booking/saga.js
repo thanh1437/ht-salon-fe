@@ -8,15 +8,11 @@ function* getServiceSaga(action) {
     let fetchCombo = yield call(getCombos, {});
     let newService = fetchService.data.content.map((item) => ({
       ...item,
-      isChoose: false,
-      description:
-        "Cắt Gội Massage 10 bước +5 trải nghiệm độc quyền Công nghệ xông mặt chuẩn SPA Tinh dầu thảo mộc thư giãn Công nghệ súng massage giảm đau nhức vai gáy Nâng cấp quy trình cắt (chỉn chu, trọn vẹn hơn) Đổi mới trải nghiệm gội riêng cho phái mạnh",
+      isChoose: false
     }));
     let newCombo = fetchCombo.data.content.map((item) => ({
       ...item,
-      isChoose: false,
-      description:
-        "Cắt Gội Massage 10 bước +5 trải nghiệm độc quyền Công nghệ xông mặt chuẩn SPA Tinh dầu thảo mộc thư giãn Công nghệ súng massage giảm đau nhức vai gáy Nâng cấp quy trình cắt (chỉn chu, trọn vẹn hơn) Đổi mới trải nghiệm gội riêng cho phái mạnh",
+      isChoose: false
     }));
     yield put(
       actions.getService.getServiceSuccess({

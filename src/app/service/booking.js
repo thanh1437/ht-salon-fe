@@ -11,11 +11,11 @@ export const createBooking = (data, token) => {
 };
 
 export const getServices = (data) => {
-  return axios.get(API_ENDPOINT + "/service/search");
+  return axios.get(API_ENDPOINT + "/service/search", {params:data});
 };
 
 export const getCombos = (data) => {
-  return axios.get(API_ENDPOINT + "/combo/search");
+  return axios.get(API_ENDPOINT + "/combo/search", {params:data});
 };
 
 export const getStylists = (data, token) => {

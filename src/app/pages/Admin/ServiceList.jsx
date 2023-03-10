@@ -313,6 +313,13 @@ export default function ServiceList() {
               handleChangeText={handleChangeText}
             />
             <FormTextField
+              label="Mô tả dịch vụ"
+              placeholder="Nhập mô tả"
+              name="description"
+              value={dataSubmit?.description}
+              handleChangeText={handleChangeText}
+            />
+            <FormTextField
               label="Giá"
               placeholder="Nhập giá"
               name="price"

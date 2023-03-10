@@ -19,9 +19,9 @@ export default function HomePage() {
 
   useEffect(() => {
     dispatch(actions.getStylist.getStylistRequest());
-    getServices().then((data) => {
+    getServices({status: 1}).then((data) => {
       service[1].other = data.data.content.slice(0, 4);
-      getCombos().then((res) => {
+      getCombos({status: 1}).then((res) => {
         service[0].other = res.data.content.slice(0, 4);
         setServiceData(service);
       });

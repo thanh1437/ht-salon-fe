@@ -50,6 +50,9 @@ export default function HeaderAction() {
     <div className={cx("right")}>
       {user ? (
         <div className={cx("right__user")}>
+          <Link to={routes.booking} className={cx("btn")} >
+              Đặt lịch
+            </Link>
           <HtmlTooltip
             title={
               <ul className={cx("user-popper")}>

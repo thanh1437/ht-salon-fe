@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../redux/auth/actions";
 
 import classNames from "classnames/bind";
 import styles from "./Auth.module.scss";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "@mui/material";
 
 const cx = classNames.bind(styles);
 
@@ -19,6 +20,7 @@ export default function Login({ onChangeLink }) {
       deviceType: "DEVICE_TYPE_ANDROID",
     },
   });
+  const { error } = useSelector(state => state.login)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,9 +31,16 @@ export default function Login({ onChangeLink }) {
     setData({ ...data, [event.target.name]: event.target.value });
   };
 
+  console.log(error)
+
   return (
     <>
       <form>
+      {error && (
+          <Alert severity={'error'} className="normal-font">
+            {error}
+          </Alert>
+        )}
         <div className={cx("input-wrapper")}>
           <label htmlFor="name">Tài khoản</label>
           <input

@@ -35,13 +35,19 @@ function* loginSaga(action) {
     let message;
     switch (error.response.status) {
       case 500:
-        message = "Incorrect email or password";
+        message = "Incorrect Username or password";
         break;
       case 401:
-        message = "Incorrect email or password";
+        message = "Incorrect Username or password";
+        break;
+      case 417:
+        message = "Tài khoản, mật khẩu không chính xác";
+        break;
+      case 400:
+        message = "Tài khoản, mật khẩu không được để trống";
         break;
       case 422:
-        message = "Email or password can not empty";
+        message = "Username or password can not empty";
         break;
       default:
         message = error.message;
@@ -59,7 +65,7 @@ function* logoutSaga(action) {
     yield call(() => {
       window.location.reload();
     });
-  } catch (error) {}
+  } catch (error) { }
 }
 
 function* registerSaga(action) {

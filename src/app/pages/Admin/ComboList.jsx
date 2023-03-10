@@ -349,6 +349,13 @@ export default function ComboList() {
               handleChangeText={handleChangeText}
             />
             <FormTextField
+              label="Mô tả combo"
+              placeholder="Nhập mô tả combo"
+              name="description"
+              value={dataSubmit?.description}
+              handleChangeText={handleChangeText}
+            />
+            <FormTextField
               label="Giá"
               placeholder="Nhập giá"
               name="price"
